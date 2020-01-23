@@ -23,22 +23,25 @@ def __count__(content: str) -> int:
         if word:
             emails = __email_match__(word)  # getting the emails from a word as a list.
             if emails:  # checking if the list is not empty
-                for _ in emails:
-                    counter = counter + 1
+                # for _ in emails:
+                #     counter = counter + 1
+                counter = counter + len(emails)
 
                 other_words = __remove_emails__(word)  # Removing the emails and getting anything else
 
-                clean_words_list = []
+                # clean_words_list = []
                 for other_word in other_words:  # cleaning the rest of the words from . @ chars.
-                    clean_words_list += __clean_words__(other_word)
+                    clean_words_list = __clean_words__(other_word)
+                    counter = counter + len(clean_words_list)
 
-                for _ in clean_words_list:
-                    counter = counter + 1
+                # for _ in clean_words_list:
+                #     counter = counter + 1
 
             else:  # If the word does not contain emails, we will split  at . and @ if they exist.
                 word_list = __clean_words__(word)  # cleaning the word from . @ chars.
-                for _ in word_list:
-                    counter = counter + 1
+                # for _ in word_list:
+                #     counter = counter + 1
+                counter = counter + len(word_list)
 
     return counter
 
@@ -98,7 +101,7 @@ def __clean_words__(word: str) -> List[str]:
     words = re.split(r'[@.]+', word)
     words = list(filter(None, words))  # Removing empty strings
     for word in words:
-        if re.match(r'\B[-]+\B', word):  # Removing dash-only strings
+        if not re.findall(r'[0-9A-z]', word):  # Removing dash-only strings
             words.remove(word)
     return words
 
