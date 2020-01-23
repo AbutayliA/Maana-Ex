@@ -107,7 +107,7 @@ def __clean_words__(word: str) -> List[str]:
     words = re.split(r'[@.]+', word)
     words = list(filter(None, words))  # Removing empty strings
     for word in words:
-        if not re.findall(r'[0-9A-z]', word):  # Removing dash-only strings
+        if not re.search(r'[0-9A-z]', word):  # Removing dash-only strings
             words.remove(word)
     return words
 
