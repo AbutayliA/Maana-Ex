@@ -81,15 +81,21 @@ def __split_content__(content: str) -> List[str]:
     return content_list
 
 
-def __read_file__(path: str) -> str:
+def __count_file__(path: str) -> int:
     """
     This function opens a txt file given its path and returns its content as string.
     :param path: str
     :return: str
     """
+    c = 0
     with open(path, 'r') as file:
-        content = file.read()
-        return content
+        while True:
+            line = file.readline()
+            if not line:
+                break
+            c = c + __count__(line)
+
+        return c
 
 
 def __clean_words__(word: str) -> List[str]:
@@ -122,8 +128,12 @@ def __walk_zip__(path: str, counts: List[int]):
                 if file_path.endswith(".txt"):
                     try:
                         with zip_ob.open(file_path) as file:
-                            content = file.read().decode('utf-8')
-                            c = __count__(content)
+                            c = 0
+                            while True:
+                                line = file.readline().decode('utf-8')
+                                if not line:
+                                    break
+                                c = c + __count__(line)
                             counts.append(c)
                     except:
                         print("Could not open " + path + "/" + file_path)
@@ -164,8 +174,7 @@ def __walk_tgz__(path: str, counts: List[int]):
                 try:
                     extract_path = __extract_file__(tar_ob, member, path)
                     file_path = extract_path + "/" + member.name
-                    content = __read_file__(file_path)
-                    c = __count__(content)
+                    c = __count_file__(file_path)
                     __remove_extracted_file__(extract_path)
                     counts.append(c)
                 except:
@@ -204,8 +213,7 @@ def __walk_directory__(path: str, counts: List[int]):
             if file.endswith(".txt"):
                 file_path = os.path.join(root, file)
                 try:
-                    content = __read_file__(file_path)
-                    c = __count__(content)
+                    c = __count_file__(file_path)
                     counts.append(c)
                 except:
                     print("Could not open " + file_path)
@@ -255,8 +263,7 @@ def __path_word_counts__(path: str) -> List[int]:
     counts = []
     if path.endswith(".txt"):
         try:
-            content = __read_file__(path)
-            c = __count__(content)
+            c = __count_file__(path)
             counts.append(c)
         except:
             print("Could not open " + path)
