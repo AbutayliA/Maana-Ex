@@ -265,8 +265,10 @@ def __path_word_counts__(path: str) -> List[int]:
         __walk_zip__(path, counts)
     elif path.endswith(".tgz"):
         __walk_tgz__(path, counts)
-    else:
+    elif os.path.isdir(path):
         __walk_directory__(path, counts)
+    else:
+        print("The type of the path: " + path + " is not allowed.")
 
     return counts
 
@@ -283,16 +285,18 @@ def run():
         path = input("Please enter another path: ")
 
     counts = __path_word_counts__(path)
-
-    ans = input("Do you want to save the output? (y/n): ")
-    while ans.lower() != "y" and ans.lower() != "n":
-        ans = "Please enter y or n as the answer: "
-
-    if ans.lower() == "n":
-        __plot__(counts)
+    if len(counts) == 0:
+        print("No text file is found.")
     else:
-        save_path = input("Please enter where you want to save the output: ")
-        __plot__(counts, save_path)
+        ans = input("Do you want to save the output? (y/n): ")
+        while ans.lower() != "y" and ans.lower() != "n":
+            ans = "Please enter y or n as the answer: "
+
+        if ans.lower() == "n":
+            __plot__(counts)
+        else:
+            save_path = input("Please enter where you want to save the output: ")
+            __plot__(counts, save_path)
 
 
 if __name__ == '__main__':
