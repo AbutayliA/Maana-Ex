@@ -83,9 +83,9 @@ def __split_content__(content: str) -> List[str]:
 
 def __count_file__(path: str) -> int:
     """
-    This function opens a txt file given its path and returns its content as string.
+    This function returns how many words in a given txt file.
     :param path: str
-    :return: str
+    :return: int
     """
     c = 0
     with open(path, 'r') as file:
